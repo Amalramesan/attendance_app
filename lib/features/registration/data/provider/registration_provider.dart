@@ -1,4 +1,7 @@
+import 'package:attendance_app/core/network/api_exception.dart';
+import 'package:attendance_app/features/registration/data/model/registration_response_model.dart';
 import 'package:attendance_app/features/registration/data/repository/registration_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationProvider extends ChangeNotifier {
@@ -7,6 +10,8 @@ class RegistrationProvider extends ChangeNotifier {
   RegistrationProvider(this.repository);
 
   bool isLoading = false;
+  String? errorMessage;
+  RegistrationResponseModel? registrationResponse;
 
   Future<bool> register({
     required String firstName,
@@ -21,9 +26,11 @@ class RegistrationProvider extends ChangeNotifier {
   }) async {
     try {
       isLoading = true;
+      errorMessage = null;
+      registrationResponse = null;
       notifyListeners();
 
-      final response = await repository.register(
+      registrationResponse = await repository.register(
         firstName: firstName,
         lastName: lastName,
         email: email,
@@ -35,8 +42,13 @@ class RegistrationProvider extends ChangeNotifier {
         location: location,
       );
 
-      return response.status;
+      return registrationResponse!.status;
     } catch (e) {
+      if (e is DioException) {
+        errorMessage = ApiException.fromDioException(e).message;
+      } else {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+      }
       return false;
     } finally {
       isLoading = false;

@@ -34,4 +34,10 @@ class StorageService {
 
     return prefs.getInt(_userIdKey);
   }
+
+  Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.clear();
+  }
 }

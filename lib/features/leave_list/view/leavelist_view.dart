@@ -1,3 +1,4 @@
+import 'package:attendance_app/core/common_widgets/snackbar.dart';
 import 'package:attendance_app/core/local_storage/storage_service.dart';
 import 'package:attendance_app/core/theams/app_colors.dart';
 import 'package:attendance_app/features/leave_list/data/provider/leave_list_provider.dart';
@@ -21,7 +22,13 @@ class _LeaveListViewState extends State<LeaveListView> {
       final userId = await StorageService().getUserId();
 
       if (userId != null) {
-        context.read<LeaveListProvider>().getLeaves(employeeId: userId);
+        if (!mounted) return;
+        await context.read<LeaveListProvider>().getLeaves(employeeId: userId);
+        if (!mounted) return;
+        final error = context.read<LeaveListProvider>().errorMessage;
+        if (error != null) {
+          AppSnackbar.showError(context, error);
+        }
       }
     });
   }

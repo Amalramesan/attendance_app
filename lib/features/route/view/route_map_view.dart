@@ -20,8 +20,6 @@ class RouteMapView extends StatelessWidget {
   Widget build(BuildContext context) {
     final markIn = LatLng(markInLat, markInLng);
     final markOut = LatLng(markOutLat, markOutLng);
-    print("Mark In : $markInLat , $markInLng");
-    print("Mark Out : $markOutLat , $markOutLng");
 
     return Scaffold(
       appBar: AppBar(title: const Text("Route Map")),

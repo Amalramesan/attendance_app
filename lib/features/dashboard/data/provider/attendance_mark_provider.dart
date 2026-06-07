@@ -1,7 +1,8 @@
+import 'package:attendance_app/core/network/api_exception.dart';
 import 'package:attendance_app/features/dashboard/data/data_source/attendance_mark_api_service.dart';
 import 'package:attendance_app/features/dashboard/data/models/attendance_mark_response.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
 
 
 class AttendanceMarkProvider
@@ -10,6 +11,7 @@ class AttendanceMarkProvider
       AttendanceMarkApiService();
 
   bool isLoading = false;
+  String? errorMessage;
 
   AttendanceMarkResponse?
   attendanceMarkResponse;
@@ -21,6 +23,7 @@ class AttendanceMarkProvider
   }) async {
     try {
       isLoading = true;
+      errorMessage = null;
       notifyListeners();
 
       attendanceMarkResponse =
@@ -34,6 +37,11 @@ class AttendanceMarkProvider
       return attendanceMarkResponse!
           .status;
     } catch (e) {
+      if (e is DioException) {
+        errorMessage = ApiException.fromDioException(e).message;
+      } else {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+      }
       return false;
     } finally {
       isLoading = false;

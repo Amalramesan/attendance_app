@@ -1,3 +1,5 @@
+import 'package:attendance_app/core/common_widgets/snackbar.dart';
+import 'package:attendance_app/core/local_storage/storage_service.dart';
 import 'package:attendance_app/core/location/location_service.dart';
 import 'package:attendance_app/features/dashboard/data/models/attendance_status_model.dart';
 import 'package:attendance_app/features/dashboard/data/provider/attendance_mark_provider.dart';
@@ -49,8 +51,14 @@ class _DashboardViewState extends State<DashboardView> {
   void initState() {
     super.initState();
 
-    Future.microtask(() {
-      context.read<AttendanceProvider>().fetchAttendanceStatus();
+    final attendanceProvider = context.read<AttendanceProvider>();
+    Future.microtask(() async {
+      await attendanceProvider.fetchAttendanceStatus();
+      if (!mounted) return;
+      final error = attendanceProvider.errorMessage;
+      if (error != null) {
+        AppSnackbar.showError(context, error);
+      }
     });
 
     getLocationName();
@@ -60,7 +68,29 @@ class _DashboardViewState extends State<DashboardView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffEEF2F1),
+      appBar: AppBar(
+        backgroundColor: const Color(0xffEEF2F1),
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Dashboard',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.black),
+            onPressed: () async {
+              await StorageService().clearAll();
 
+              if (!context.mounted) return;
+
+              AppSnackbar.showSuccess(context, 'Logged out successfully');
+
+              context.goNamed('login');
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -81,42 +111,90 @@ class _DashboardViewState extends State<DashboardView> {
                     shiftStartTime: attendance?.shiftStartTime ?? '--:--',
 
                     onMarkIn: () async {
-                      final position = await LocationService()
-                          .getCurrentLocation();
-                      print("LAT : ${position.latitude}");
+                      try {
+                        final position = await LocationService()
+                            .getCurrentLocation();
+                        if (!context.mounted) return;
+                        final markProvider = context
+                            .read<AttendanceMarkProvider>();
+                        final success = await markProvider.markAttendance(
+                          attendanceStatus: 1,
+                          latitude: position.latitude.toString(),
+                          longitude: position.longitude.toString(),
+                        );
 
-                      print("LNG : ${position.longitude}");
-                      final success = await context
-                          .read<AttendanceMarkProvider>()
-                          .markAttendance(
-                            attendanceStatus: 1,
-                            latitude: position.latitude.toString(),
-                            longitude: position.longitude.toString(),
+                        if (!context.mounted) return;
+
+                        if (success &&
+                            markProvider.attendanceMarkResponse?.status ==
+                                true) {
+                          AppSnackbar.showSuccess(
+                            context,
+                            markProvider.attendanceMarkResponse?.message ??
+                                'Mark In successful',
                           );
-
-                      if (success) {
-                        await context
-                            .read<AttendanceProvider>()
-                            .fetchAttendanceStatus();
+                          if (!context.mounted) return;
+                          await context
+                              .read<AttendanceProvider>()
+                              .fetchAttendanceStatus();
+                        } else {
+                          AppSnackbar.showError(
+                            context,
+                            markProvider.errorMessage ??
+                                markProvider.attendanceMarkResponse?.message ??
+                                'Failed to Mark In',
+                          );
+                        }
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        AppSnackbar.showError(
+                          context,
+                          e.toString().replaceAll('Exception: ', ''),
+                        );
                       }
                     },
 
                     onMarkOut: () async {
-                      final position = await LocationService()
-                          .getCurrentLocation();
+                      try {
+                        final position = await LocationService()
+                            .getCurrentLocation();
+                        if (!context.mounted) return;
+                        final markProvider = context
+                            .read<AttendanceMarkProvider>();
+                        final success = await markProvider.markAttendance(
+                          attendanceStatus: 2,
+                          latitude: position.latitude.toString(),
+                          longitude: position.longitude.toString(),
+                        );
 
-                      final success = await context
-                          .read<AttendanceMarkProvider>()
-                          .markAttendance(
-                            attendanceStatus: 2,
-                            latitude: position.latitude.toString(),
-                            longitude: position.longitude.toString(),
+                        if (!context.mounted) return;
+
+                        if (success &&
+                            markProvider.attendanceMarkResponse?.status ==
+                                true) {
+                          AppSnackbar.showSuccess(
+                            context,
+                            markProvider.attendanceMarkResponse?.message ??
+                                'Mark Out successful',
                           );
-
-                      if (success) {
-                        await context
-                            .read<AttendanceProvider>()
-                            .fetchAttendanceStatus();
+                          if (!context.mounted) return;
+                          await context
+                              .read<AttendanceProvider>()
+                              .fetchAttendanceStatus();
+                        } else {
+                          AppSnackbar.showError(
+                            context,
+                            markProvider.errorMessage ??
+                                markProvider.attendanceMarkResponse?.message ??
+                                'Failed to Mark Out',
+                          );
+                        }
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        AppSnackbar.showError(
+                          context,
+                          e.toString().replaceAll('Exception: ', ''),
+                        );
                       }
                     },
                   );

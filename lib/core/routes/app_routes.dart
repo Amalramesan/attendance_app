@@ -1,3 +1,4 @@
+import 'package:attendance_app/core/local_storage/storage_service.dart';
 import 'package:attendance_app/features/dashboard/view/dashboard_view.dart';
 import 'package:attendance_app/features/leave/view/leave_view.dart';
 import 'package:attendance_app/features/leave_list/view/leavelist_view.dart';
@@ -12,7 +13,18 @@ class AppRoutes {
 
   static final router = GoRouter(
     initialLocation: '/login',
-
+    redirect: (context, state) async {
+      final token = await StorageService().getToken();
+      final isLoggingIn = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/registration';
+      if (token == null) {
+        return isLoggingIn ? null : '/login';
+      }
+      if (isLoggingIn) {
+        return '/dashboard';
+      }
+      return null;
+    },
     routes: [
       GoRoute(
         path: '/login',

@@ -61,7 +61,7 @@ class AttendanceStatusCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset('assets/images/logout.png', width: 18, height: 18),
+                Image.asset('assets/icons/logout.png', width: 18, height: 18),
                 const SizedBox(width: 6),
                 const Text("Mark In"),
               ],

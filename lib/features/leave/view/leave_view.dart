@@ -1,3 +1,4 @@
+import 'package:attendance_app/core/common_widgets/snackbar.dart';
 import 'package:attendance_app/core/local_storage/storage_service.dart';
 import 'package:attendance_app/features/leave/data/provider/apply_leave_rovider.dart';
 import 'package:attendance_app/features/leave/view/widget/leave_action_button_widget.dart';
@@ -37,38 +38,30 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView> {
 
   Future<void> _applyLeave() async {
     if (fromController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter start date')));
+      AppSnackbar.showWarning(context, 'Please enter start date');
       return;
     }
 
     if (toController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter end date')));
+      AppSnackbar.showWarning(context, 'Please enter end date');
       return;
     }
 
     if (reasonController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter reason')));
+      AppSnackbar.showWarning(context, 'Please enter reason');
       return;
     }
 
     if (selectedLeaveType == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please select leave type')));
+      AppSnackbar.showWarning(context, 'Please select leave type');
       return;
     }
     final userId = await StorageService().getUserId();
 
+    if (!mounted) return;
+
     if (userId == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('User not found')));
+      AppSnackbar.showError(context, 'User not found');
       return;
     }
 
@@ -90,14 +83,10 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView> {
 
     if (!mounted) return;
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            provider.applyLeaveResponse?.message ??
-                'Leave applied successfully',
-          ),
-        ),
+    if (success && provider.applyLeaveResponse?.status == true) {
+      AppSnackbar.showSuccess(
+        context,
+        provider.applyLeaveResponse?.message ?? 'Leave applied successfully',
       );
 
       fromController.clear();
@@ -109,9 +98,10 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView> {
         isFullDay = true;
       });
     } else {
-      ScaffoldMessenger.of(
+      AppSnackbar.showError(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Failed to apply leave')));
+        provider.errorMessage ?? 'Failed to apply leave',
+      );
     }
   }
 
@@ -129,13 +119,10 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView> {
           },
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Color(0xff042222)),
-            ),
+            padding: EdgeInsets.only(right: 20),
+            child: Image.asset('assets/icons/profile icon.png', height: 30),
           ),
         ],
       ),
@@ -175,7 +162,7 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView> {
                   children: [
                     LeaveTextField(
                       label: "From",
-                      hintText: "DD/MM/YYYY",
+                      hintText: "YYYY/MM/DD",
                       controller: fromController,
                       suffixIcon: const Icon(Icons.calendar_month),
                     ),
@@ -184,7 +171,7 @@ class _ApplyLeaveViewState extends State<ApplyLeaveView> {
 
                     LeaveTextField(
                       label: "To",
-                      hintText: "DD/MM/YYYY",
+                      hintText: "YYYY/MM/DD",
                       controller: toController,
                       suffixIcon: const Icon(Icons.calendar_month),
                     ),

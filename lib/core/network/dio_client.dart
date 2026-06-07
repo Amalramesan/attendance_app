@@ -3,9 +3,14 @@ import '../local_storage/storage_service.dart';
 import 'api_constants.dart';
 
 class DioClient {
+  static final DioClient _instance = DioClient._internal();
   late final Dio dio;
 
-  DioClient() {
+  factory DioClient() {
+    return _instance;
+  }
+
+  DioClient._internal() {
     dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,

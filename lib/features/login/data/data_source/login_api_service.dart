@@ -10,18 +10,14 @@ class LoginApiService {
     required String mobileNumber,
     required String password,
   }) async {
-    try {
-      final response = await _dioClient.dio.post(
-        ApiConstants.login,
-        data: {
-          "mobile_number": mobileNumber,
-          "password": password,
-        },
-      );
+    final response = await _dioClient.dio.post(
+      ApiConstants.login,
+      data: {
+        "mobile_number": mobileNumber,
+        "password": password,
+      },
+    );
 
-      return LoginResponse.fromJson(response.data);
-    } catch (e) {
-      throw Exception('Login failed: $e');
-    }
+    return LoginResponse.fromJson(response.data);
   }
 }

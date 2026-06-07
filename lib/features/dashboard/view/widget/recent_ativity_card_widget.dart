@@ -24,7 +24,11 @@ class RecentActivityCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const CircleAvatar(child: Icon(Icons.person)),
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 20,
+            backgroundImage: const AssetImage('assets/icons/recenticon.png'),
+          ),
 
           const SizedBox(width: 12),
 

@@ -1,4 +1,4 @@
-import 'package:attendance_app/core/utils/shackbar.dart';
+import 'package:attendance_app/core/common_widgets/snackbar.dart';
 import 'package:attendance_app/core/utils/validation.dart';
 import 'package:attendance_app/features/registration/data/provider/registration_provider.dart';
 import 'package:attendance_app/features/registration/view/widgets/custom_register_button.dart';
@@ -187,21 +187,17 @@ class RegisterView extends StatelessWidget {
 
                                   if (!context.mounted) return;
 
-                                  if (success) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Registration Successful',
-                                        ),
-                                      ),
+                                  if (success && provider.registrationResponse?.status == true) {
+                                    AppSnackbar.showSuccess(
+                                      context,
+                                      provider.registrationResponse?.message ?? 'Registration Successful',
                                     );
 
                                     Navigator.pop(context);
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Registration Failed'),
-                                      ),
+                                    AppSnackbar.showError(
+                                      context,
+                                      provider.errorMessage ?? provider.registrationResponse?.message ?? 'Registration Failed',
                                     );
                                   }
                                 },

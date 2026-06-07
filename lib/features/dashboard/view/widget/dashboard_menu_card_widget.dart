@@ -22,7 +22,7 @@ class DashboardMenuCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          height: 130,
+          height: 110,
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
@@ -31,10 +31,7 @@ class DashboardMenuCard extends StatelessWidget {
                 ? const LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    colors: [
-                      Color(0xff042222),
-                      Color(0xff03624C),
-                    ],
+                    colors: [Color(0xff042222), Color(0xff03624C)],
                   )
                 : null,
 
@@ -42,9 +39,7 @@ class DashboardMenuCard extends StatelessWidget {
 
             border: isPrimary
                 ? null
-                : Border.all(
-                    color: const Color(0xffE0E0E0),
-                  ),
+                : Border.all(color: const Color(0xffE0E0E0)),
 
             boxShadow: [
               BoxShadow(
@@ -61,17 +56,16 @@ class DashboardMenuCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor:
-                    isPrimary ? Colors.white : const Color(0xff042222),
+                backgroundColor: isPrimary
+                    ? Colors.white
+                    : const Color(0xff042222),
 
                 child: Image.asset(
                   imagePath,
                   width: iconSize,
                   height: iconSize,
                   fit: BoxFit.contain,
-                  color: isPrimary
-                      ? const Color(0xff042222)
-                      : Colors.white,
+                  color: isPrimary ? const Color(0xff042222) : Colors.white,
                 ),
               ),
 
@@ -80,11 +74,9 @@ class DashboardMenuCard extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: isPrimary
-                      ? Colors.white
-                      : const Color(0xff042222),
+                  color: isPrimary ? Colors.white : const Color(0xff042222),
                 ),
               ),
             ],

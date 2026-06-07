@@ -9,18 +9,12 @@ class AttendanceApiService {
 
   Future<AttendanceStatusResponse>
   getAttendanceStatus() async {
-    try {
-      final response = await _dioClient.dio.get(
-        ApiConstants.attendanceStatus,
-      );
+    final response = await _dioClient.dio.get(
+      ApiConstants.attendanceStatus,
+    );
 
-      return AttendanceStatusResponse.fromJson(
-        response.data,
-      );
-    } catch (e) {
-      throw Exception(
-        'Failed to fetch attendance status: $e',
-      );
-    }
+    return AttendanceStatusResponse.fromJson(
+      response.data,
+    );
   }
 }

@@ -39,9 +39,9 @@ class CustomSaveButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          child: const Text(
-            'Save',
-            style: TextStyle(
+          child: Text(
+            title,
+            style: const TextStyle(
               color: AppColors.white,
               fontWeight: FontWeight.w500,
               fontSize: 16,

@@ -15,32 +15,18 @@ class RouteSearchField extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
 
-        suffixIcon: const Icon(
-          Icons.close,
-          color: AppColors.primary,
-        ),
+        suffixIcon: const Icon(Icons.close, color: AppColors.primary),
 
-        contentPadding:
-            const EdgeInsets.symmetric(
-          vertical: 12,
-        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 5),
 
         enabledBorder: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-            width: 1.5,
-          ),
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
 
         focusedBorder: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-            width: 1.5,
-          ),
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
       ),
     );

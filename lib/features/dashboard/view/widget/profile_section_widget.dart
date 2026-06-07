@@ -22,7 +22,7 @@ class ProfileSection extends StatelessWidget {
             ),
           ),
           child: Image.asset(
-            "assets/images/profile icon.png",
+            "assets/icons/profile icon.png",
             fit: BoxFit.cover,
           ),
         ),
