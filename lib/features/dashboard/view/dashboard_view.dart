@@ -109,6 +109,9 @@ class _DashboardViewState extends State<DashboardView> {
                     attendanceStatus:
                         attendance?.attendanceStatus ?? 'not_marked_in',
                     shiftStartTime: attendance?.shiftStartTime ?? '--:--',
+                    markInTime: attendance?.markInTime,
+
+                    markOutTime: attendance?.markOutTime,
 
                     onMarkIn: () async {
                       try {

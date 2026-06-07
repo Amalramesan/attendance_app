@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 class AttendanceStatusCard extends StatelessWidget {
   final String shiftStartTime;
   final String attendanceStatus;
+  final String? markInTime;
+  final String? markOutTime;
   final VoidCallback onMarkIn;
   final VoidCallback onMarkOut;
 
   const AttendanceStatusCard({
     super.key,
     required this.attendanceStatus,
-    required this.onMarkIn,
     required this.shiftStartTime,
+    required this.onMarkIn,
     required this.onMarkOut,
+    this.markInTime,
+    this.markOutTime,
   });
 
   @override
@@ -48,13 +52,12 @@ class AttendanceStatusCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  "Your shift start at $shiftStartTime",
+                  "Your shift starts at $shiftStartTime",
                   style: const TextStyle(color: Colors.white70, fontSize: 11),
                 ),
               ],
             ),
           ),
-
           ElevatedButton(
             onPressed: onMarkIn,
             style: _buttonStyle(),
@@ -79,34 +82,34 @@ class AttendanceStatusCard extends StatelessWidget {
       decoration: _cardDecoration(),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Work Started",
+                const Text(
+                  "Your Work Started",
                   style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
-                  "You are currently checked in",
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                  "Checked In at ${markInTime ?? '--:--'}",
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ],
             ),
           ),
-
           ElevatedButton(
             onPressed: onMarkOut,
             style: _buttonStyle(),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset('assets/images/logout.png', width: 18, height: 18),
+                Image.asset('assets/icons/markout.png', width: 18, height: 18),
                 const SizedBox(width: 6),
                 const Text("Mark Out"),
               ],
@@ -119,20 +122,25 @@ class AttendanceStatusCard extends StatelessWidget {
 
   Widget _buildCompletedCard() {
     return Container(
-      height: 75,
+      height: 105,
       padding: const EdgeInsets.symmetric(horizontal: 25),
       decoration: _cardDecoration(),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             "Your Day Completed",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
-            "Attendance completed",
-            style: TextStyle(color: Colors.white70, fontSize: 12),
+            "Started at ${markInTime ?? '--:--'}   Ended at ${markOutTime ?? '--:--'}",
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white70, fontSize: 13),
           ),
         ],
       ),

@@ -23,7 +23,7 @@ class LeaveListProvider extends ChangeNotifier {
       response = await _apiService.getLeaves(
         employeeId: employeeId,
         leaveType: 'all',
-        month: '2026-12',
+        month: '2026-06',
       );
     } catch (e) {
       if (e is DioException) {
